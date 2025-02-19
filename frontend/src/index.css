@@ -1,0 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: Outfit;
+}
+
+.active hr {
+  @apply block  /* active hr e страницата, която е отворена и така слагаме чертта отдолу да е само върху нея */;
+}
+
+::-webkit-scrollbar {
+  @apply hidden;
+}
+/* Този CSS код казва на браузърите, използващи WebKit (като Chrome или Safari), да скрият скролбарите. */
+@media (max-width: 740px) {
+  .active p {
+    @apply text-white bg-primary;
+  }
+}
+/*Това се отнася за менюто, което е при малките екрани*/

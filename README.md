@@ -1,6 +1,6 @@
-# Fix Buddies
+# FixBuddy
 
-Fix Buddies is an appointment booking website for home service professionals like plumbers, electricians, and gardeners.
+FixBuddy is an appointment booking website for home service professionals like plumbers, electricians, and gardeners.
 
 ## Features
 - Book appointments online

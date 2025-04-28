@@ -5,7 +5,6 @@ import jwt from "jsonwebtoken";
 import { v2 as cloudinary } from "cloudinary";
 import professionalModel from "../models/professionalsModel.js";
 import appointmentModel from "../models/appointmentModel.js";
-import Stripe from "stripe";
 
 // API to register user
 const registerUser = async (req, res) => {
@@ -241,34 +240,6 @@ const cancelAppointment = async (req, res) => {
   }
 };
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-// API to make payment with Stripe
-const paymentStripe = async (req, res) => {
-  try {
-    const { appointmentId } = req.body;
-    const appointmentData = await appointmentModel.findById(appointmentId);
-
-    if (!appointmentData || appointmentData.cancelled) {
-      return res.json({
-        success: false,
-        message: "Appointment Cancelled or Not Found",
-      });
-    }
-
-    // creating payment intent
-
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: appointmentData.amount * 100,
-      currency: process.env.CURRENCY,
-      metadata: { appointmentId: appointmentId },
-    });
-
-    res.json({ success: true, clientSecret: paymentIntent.client_secret });
-  } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: error.message });
-  }
-};
 export {
   registerUser,
   loginUser,
@@ -277,5 +248,4 @@ export {
   bookAppointment,
   listAppointment,
   cancelAppointment,
-  paymentStripe,
 };

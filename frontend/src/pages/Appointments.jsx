@@ -73,32 +73,6 @@ const Appointments = () => {
     }
   };
 
-  const appointmentStripe = async (appointmentId) => {
-    console.log("🚀 appointmentStripe called with:", appointmentId);
-
-    try {
-      console.log(
-        "📤 Sending POST request to:",
-        backendUrl + "/api/user/payment-stripe"
-      );
-
-      const { data } = await axios.post(
-        backendUrl + "/api/user/payment-stripe",
-        { appointmentId },
-        { headers: { token } }
-      );
-      console.log("📡 Response from backend:", data);
-
-      if (data.success) {
-        console.log(data.clientSecret);
-      } else {
-        console.log("Payment API failed", data.message);
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
   useEffect(() => {
     if (token) {
       getUserAppointments();
@@ -141,10 +115,7 @@ const Appointments = () => {
             <div></div>
             <div className="flex flex-col gap-2 justify-end">
               {!item.cancelled && (
-                <button
-                  onClick={() => appointmentStripe(item._id)}
-                  className="rounded-xl text-sm text-stone-500 text-center sm:min-w-48 py-2 border hover:bg-primary hover:text-white transition-all duration-300"
-                >
+                <button className="rounded-xl text-sm text-stone-500 text-center sm:min-w-48 py-2 border hover:bg-primary hover:text-white transition-all duration-300">
                   Pay Now
                 </button>
               )}

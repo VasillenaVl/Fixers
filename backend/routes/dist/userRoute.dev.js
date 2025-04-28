@@ -24,6 +24,5 @@ userRouter.post("/update-profile", _multer["default"].single("image"), _authUser
 userRouter.post("/book-appointment", _authUser["default"], _userController.bookAppointment);
 userRouter.get("/appointments", _authUser["default"], _userController.listAppointment);
 userRouter.post("/cancel-appointment", _authUser["default"], _userController.cancelAppointment);
-userRouter.post("/payment-stripe", _authUser["default"], _userController.paymentStripe);
 var _default = userRouter;
 exports["default"] = _default;

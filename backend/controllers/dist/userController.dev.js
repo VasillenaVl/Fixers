@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.paymentStripe = exports.cancelAppointment = exports.listAppointment = exports.bookAppointment = exports.updateProfile = exports.getProfile = exports.loginUser = exports.registerUser = void 0;
+exports.cancelAppointment = exports.listAppointment = exports.bookAppointment = exports.updateProfile = exports.getProfile = exports.loginUser = exports.registerUser = void 0;
 
 var _validator = _interopRequireDefault(require("validator"));
 
@@ -18,8 +18,6 @@ var _cloudinary = require("cloudinary");
 var _professionalsModel = _interopRequireDefault(require("../models/professionalsModel.js"));
 
 var _appointmentModel = _interopRequireDefault(require("../models/appointmentModel.js"));
-
-var _stripe = _interopRequireDefault(require("stripe"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -565,66 +563,3 @@ var cancelAppointment = function cancelAppointment(req, res) {
 };
 
 exports.cancelAppointment = cancelAppointment;
-var stripe = new _stripe["default"](process.env.STRIPE_SECRET_KEY); // API to make payment with Stripe
-
-var paymentStripe = function paymentStripe(req, res) {
-  var appointmentId, appointmentData, paymentIntent;
-  return regeneratorRuntime.async(function paymentStripe$(_context8) {
-    while (1) {
-      switch (_context8.prev = _context8.next) {
-        case 0:
-          _context8.prev = 0;
-          appointmentId = req.body.appointmentId;
-          _context8.next = 4;
-          return regeneratorRuntime.awrap(_appointmentModel["default"].findById(appointmentId));
-
-        case 4:
-          appointmentData = _context8.sent;
-
-          if (!(!appointmentData || appointmentData.cancelled)) {
-            _context8.next = 7;
-            break;
-          }
-
-          return _context8.abrupt("return", res.json({
-            success: false,
-            message: "Appointment Cancelled or Not Found"
-          }));
-
-        case 7:
-          _context8.next = 9;
-          return regeneratorRuntime.awrap(stripe.paymentIntents.create({
-            amount: appointmentData.amount * 100,
-            currency: process.env.CURRENCY,
-            metadata: {
-              appointmentId: appointmentId
-            }
-          }));
-
-        case 9:
-          paymentIntent = _context8.sent;
-          res.json({
-            success: true,
-            clientSecret: paymentIntent.client_secret
-          });
-          _context8.next = 17;
-          break;
-
-        case 13:
-          _context8.prev = 13;
-          _context8.t0 = _context8["catch"](0);
-          console.log(_context8.t0);
-          res.json({
-            success: false,
-            message: _context8.t0.message
-          });
-
-        case 17:
-        case "end":
-          return _context8.stop();
-      }
-    }
-  }, null, null, [[0, 13]]);
-};
-
-exports.paymentStripe = paymentStripe;

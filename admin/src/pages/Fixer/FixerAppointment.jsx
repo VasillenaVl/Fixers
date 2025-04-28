@@ -4,7 +4,6 @@ import { ProfessionalsContext } from "../../context/ProfessionalsContext";
 import { useEffect } from "react";
 import { AppContext } from "../../context/AppContex";
 import { assets } from "../../assets/assets";
-import { appointmentCancel } from "../../../../backend/controllers/professionalsController";
 
 const FixerAppointment = () => {
   const {
@@ -67,7 +66,7 @@ const FixerAppointment = () => {
                 alt=""
               />
               <img
-                onClick={() => appointmentCancel(item._id)}
+                onClick={() => completeAppointment(item._id)}
                 src={assets.tick_icon}
                 alt=""
               />

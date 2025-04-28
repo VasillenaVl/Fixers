@@ -156,7 +156,7 @@ export const professionals = [
     speciality: "Gardener",
     experience: "4 Years",
     about:
-      "Anna is known for his attention to detail and high-quality painting services for both interiors and exteriorsis a professional gardener who creates lush landscapes and maintains beautiful outdoor spaces.",
+      "Anna is a professional gardener who creates lush landscapes and maintains beautiful outdoor spaces.",
     fees: 60,
     address: {
       line1: "Boris I, 7",

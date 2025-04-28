@@ -9,7 +9,7 @@ const professionalsSchema = new mongoose.Schema(
     speciality: { type: String, required: true },
     experience: { type: String, required: true },
     about: { type: String, required: true },
-    availiable: { type: Boolean, default: true }, // не required, защото иначе няма да ни даде да създадем нов фиксър ако не е availiable
+    available: { type: Boolean, default: true }, // не required, защото иначе няма да ни даде да създадем нов фиксър ако не е available
     fees: { type: Number, required: true },
     address: { type: Object, required: true },
     date: { type: Number, required: true },
@@ -20,6 +20,6 @@ const professionalsSchema = new mongoose.Schema(
 
 const professionalModel =
   mongoose.models.professional ||
-  mongoose.model("profesional", professionalsSchema);
+  mongoose.model("professional", professionalsSchema);
 
 export default professionalModel;

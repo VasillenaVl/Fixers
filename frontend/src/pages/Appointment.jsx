@@ -1,15 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
-import { assets, professionals } from "../assets/assets";
+import { assets } from "../assets/assets";
 import RelatedProfs from "../components/RelatedProfs";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const Appointment = () => {
   const { fixId } = useParams();
-  const { professionals, currencySymbol } = useContext(AppContext);
+  const { professionals, currencySymbol, backendUrl, token, getFixersData } =
+    useContext(AppContext);
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
-  const [fixInfo, setFixInfo] = useState();
+  const navigate = useNavigate();
+
+  const [fixInfo, setFixInfo] = useState(false);
   const [fixSlots, setFixSlots] = useState([]);
   const [slotIndex, setSlotIndex] = useState(0);
   const [slotTime, setSlotTime] = useState("");
@@ -54,17 +59,69 @@ const Appointment = () => {
           minute: "2-digit",
         });
 
-        // добавяме слот в масива
-        timeSlots.push({
-          datetime: new Date(currentDate),
-          time: formattedTime,
-        });
+        let day = currentDate.getDate();
+        let month = currentDate.getMonth() + 1;
+        let year = currentDate.getFullYear();
+
+        const slotDate = day + "_" + month + "_" + year;
+        const slotTime = formattedTime;
+
+        // когато дадени час и дата са запазени не трябва да се показват повече като опции
+
+        const isSlotAvailable =
+          fixInfo.slots_booked[slotDate] &&
+          fixInfo.slots_booked[slotDate].includes(slotTime)
+            ? false
+            : true;
+
+        if (isSlotAvailable) {
+          // добавяме слот в масива
+          timeSlots.push({
+            datetime: new Date(currentDate),
+            time: formattedTime,
+          });
+        }
 
         // инкрементирамер сегашното време с 30 минути
         currentDate.setMinutes(currentDate.getMinutes() + 30);
       }
 
       setFixSlots((prev) => [...prev, timeSlots]);
+    }
+  };
+
+  const bookAppointment = async () => {
+    if (!token) {
+      toast.warn("Login to book an appointment");
+      return navigate("/login");
+    }
+    try {
+      const date = fixSlots[slotIndex][0].datetime;
+
+      let day = date.getDate();
+      let month = date.getMonth() + 1;
+      let year = date.getFullYear();
+
+      const slotDate = day + "_" + month + "_" + year;
+
+      console.log(slotDate);
+
+      const { data } = await axios.post(
+        backendUrl + "/api/user/book-appointment",
+        { fixId, slotDate, slotTime },
+        { headers: { token } }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        getFixersData();
+        navigate("/appointments");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
     }
   };
 
@@ -166,7 +223,10 @@ const Appointment = () => {
                 </p>
               ))}
           </div>
-          <button className="bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6 ml-60">
+          <button
+            onClick={bookAppointment}
+            className="bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6 ml-60"
+          >
             Book Me
           </button>
         </div>

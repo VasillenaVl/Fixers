@@ -3,6 +3,7 @@ import { assets } from "../assets/assets";
 import { AdminContext } from "../context/AdminContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { ProfessionalsContext } from "../context/ProfessionalsContext";
 
 const Login = () => {
   const [state, setState] = useState("Admin");
@@ -13,9 +14,12 @@ const Login = () => {
 
   const { setAToken, backendUrl } = useContext(AdminContext);
 
+  const { setFToken } = useContext(ProfessionalsContext);
+
   const onSubmitHandler = async (event) => {
     event.preventDefault();
 
+    // Admin Login
     try {
       if (state === "Admin") {
         const { data } = await axios.post(backendUrl + "/api/admin/login", {
@@ -30,7 +34,22 @@ const Login = () => {
         } else {
           toast.error(data.message);
         }
+
+        // Fixer Login
       } else {
+        const { data } = await axios.post(
+          backendUrl + "/api/professional/login",
+          { email, password }
+        );
+        if (data.success) {
+          //console.log(data.token);
+
+          localStorage.setItem("fToken", data.token); // so we can store the token (email and pass) in the local storage
+          setFToken(data.token);
+          console.log(data.token);
+        } else {
+          toast.error(data.message);
+        }
       }
     } catch (error) {}
   };

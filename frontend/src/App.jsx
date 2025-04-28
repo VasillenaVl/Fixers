@@ -10,11 +10,14 @@ import Appointments from "./pages/Appointments";
 import Navbar from "./components/Navbar";
 import Appointment from "./pages/Appointment";
 import Footer from "./components/Footer";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   return (
     <div className="w-[85%] mx-auto sm:w-[85%]">
       {/*ще е с ширина 85% от екрана, автоматично ще има разстояния и от двете страни, стилът ще се прилага на екрани с ширина, равна или по-голяма от sm (обикновено 640px). */}
+      <ToastContainer />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

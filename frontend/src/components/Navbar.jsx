@@ -1,13 +1,23 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import logo from "../assets/logo.png"; // Импортиране на логото
 import { NavLink, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
+import { AppContext } from "../context/AppContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
 
   const [showMenu, setShowMenu] = useState(false);
-  const [token, setToken] = useState(true);
+
+  const { token, setToken, userData } = useContext(AppContext);
+
+  {
+    /* за да може да не седи във вече създаден профил, а е автоматично logout-нат и да се показва бутонът за регистрация */
+  }
+  const logout = () => {
+    setToken(false);
+    localStorage.removeItem("token");
+  };
 
   return (
     <div className="flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-700">
@@ -36,11 +46,11 @@ const Navbar = () => {
         </NavLink>
       </ul>
       <div className="flex item-center gap-4">
-        {token ? (
+        {token && userData ? (
           <div className="flex items-center gap-2 cursor-pointer group relative">
             <img
               className="w-13 h-12 border-1.3 border-black rounded-full"
-              src={assets.profile_pic}
+              src={userData.image}
               alt=" "
             />
             <img className="w-2.5" src={assets.dropdown_icon} alt=" " />
@@ -60,10 +70,7 @@ const Navbar = () => {
                 >
                   Appointments
                 </p>
-                <p
-                  onClick={() => setToken(false)}
-                  className="hover:text-black cursor-pointer"
-                >
+                <p onClick={logout} className="hover:text-black cursor-pointer">
                   Logout
                 </p>
               </div>

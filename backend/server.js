@@ -5,6 +5,8 @@ import "dotenv/config";
 import connectDB from "./config/mongodb.js";
 import connectCloudinary from "./config/cloudinary.js";
 import adminRouter from "./routes/adminRoute.js";
+import professionalRouter from "./routes/professionalRoute.js";
+import userRouter from "./routes/userRoute.js";
 
 const upload = multer({ dest: "uploads/" });
 
@@ -21,8 +23,10 @@ app.use(cors()); // backend се свързва с frontend
 // api endpoints
 
 app.use("/api/admin", adminRouter);
-
 // localhost:4000/api/admin-professional
+
+app.use("/api/professional", professionalRouter);
+app.use("/api/user", userRouter);
 
 app.get("/", (req, res) => {
   res.send("API WORKING");
